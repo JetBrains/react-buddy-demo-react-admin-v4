@@ -4,7 +4,7 @@ import {
   Palette,
   Variant,
 } from "@react-buddy/ide-toolbox";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Admin,
   Authenticated,
@@ -13,7 +13,6 @@ import {
   CustomRoutes,
   Datagrid,
   EditGuesser,
-  Error,
   ExportButton,
   FilterButton,
   List,
@@ -49,7 +48,6 @@ import {
   useUpdate,
   useUpdateMany,
   EditButton,
-  DatagridBody,
   DatagridConfigurable,
   SimpleListConfigurable,
   SingleFieldList,
@@ -62,7 +60,6 @@ import {
   SelectColumnsButton,
   Count,
   useList,
-  ListContextProvider,
   useListController,
   useUnselect,
   useUnselectAll,
@@ -155,8 +152,9 @@ import {
   TranslatableInputs,
   useInput,
   NumberInput,
+  WithListContext,
 } from "react-admin";
-import { Route, useParams } from "react-router-dom";
+import { Route, useParams } from "react-router";
 
 export default () => (
   <Palette>
@@ -273,7 +271,7 @@ export default () => (
         <Variant proto={UseDeleteManyProto} />
       </Component>
     </Category>
-    <Category name="security">
+    <Category name="Security">
       <Component
         name="Authenticated"
         docURL="https://marmelab.com/react-admin/Authenticated.html"
@@ -347,7 +345,7 @@ export default () => (
             </Datagrid>
           </List>
         </Variant>
-        <Variant>
+        <Variant name="actions">
           <List
             actions={
               <TopToolbar>
@@ -686,6 +684,19 @@ export default () => (
           <Count sort={{ field: "sourceName", order: "ASC" }} />
         </Variant>
       </Component>
+      <Component name="WithListContext">
+        <Variant>
+          <WithListContext
+            render={({ data }) => (
+              <ul>
+                {data.map((record) => (
+                  <li key={record.id}>{record.title}</li>
+                ))}
+              </ul>
+            )}
+          />
+        </Variant>
+      </Component>
       <Component
         name="useList"
         docURL="https://marmelab.com/react-admin/useList.html"
@@ -729,7 +740,7 @@ export default () => (
             </SimpleForm>
           </Create>
         </Variant>
-        <Variant>
+        <Variant name="actions">
           <Create
             actions={<TopToolbar>{/* Add your custom actions */}</TopToolbar>}
           >
@@ -747,13 +758,6 @@ export default () => (
         </Variant>
         <Variant name="redirect">
           <Create redirect="list">
-            <SimpleForm>
-              <TextInput source="sourceName" />
-            </SimpleForm>
-          </Create>
-        </Variant>
-        <Variant name="resource">
-          <Create resource="recordName">
             <SimpleForm>
               <TextInput source="sourceName" />
             </SimpleForm>
@@ -1003,7 +1007,7 @@ export default () => (
             </TabbedForm.Tab>
           </TabbedForm>
         </Variant>
-        <Variant>
+        <Variant name="toolbar">
           <TabbedForm toolbar={<div>Toolbar content</div>}>
             <TabbedForm.Tab label="Tab1">
               <TextInput source="sourceName" />
@@ -1013,7 +1017,7 @@ export default () => (
             </TabbedForm.Tab>
           </TabbedForm>
         </Variant>
-        <Variant>
+        <Variant name="validate">
           <TabbedForm
             validate={(values) => {
               const errors = {};
@@ -1028,7 +1032,7 @@ export default () => (
             </TabbedForm.Tab>
           </TabbedForm>
         </Variant>
-        <Variant>
+        <Variant name="warnWhenUnsavedChanges">
           <TabbedForm warnWhenUnsavedChanges>
             <TabbedForm.Tab label="Tab1">
               <TextInput source="sourceName" />
@@ -1684,16 +1688,7 @@ export default () => (
             <TextField source="sourceNameTwo" />
           </ReferenceOneField>
         </Variant>
-        <Variant>
-          <ReferenceOneField
-            label="Label"
-            reference="resourceName"
-            target="sourceName"
-          >
-            <TextField source="sourceName" />
-          </ReferenceOneField>
-        </Variant>
-        <Variant>
+        <Variant name="filter">
           <ReferenceOneField
             label="Label"
             reference="resourceName"
@@ -2266,7 +2261,7 @@ export default () => (
             optionValue="_id"
           />
         </Variant>
-        <Variant>
+        <Variant name="row">
           <RadioButtonGroupInput
             source="sourceName"
             choices={[
